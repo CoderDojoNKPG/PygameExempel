@@ -7,8 +7,10 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Plattformskollision")
 clock = pygame.time.Clock()
 
+# Sökvägen till det här scriptet.
+script_dir = os.path.dirname(os.path.abspath(__file__))
 # Ladda spelarens sprite
-player_image = pygame.image.load(os.path.join("img", "coderowl.png"))
+player_image = pygame.image.load(os.path.join(script_dir, "img", "coderowl.png"))
 player_image = pygame.transform.scale(player_image, (50, 50))  # Skala till 50x50 pixlar
 
 # Färger
@@ -42,17 +44,25 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_LEFT: moving_left = True
-        #     if event.key == pygame.K_RIGHT: moving_right = True
-        #     if event.key == pygame.K_UP and is_grounded:
-        #         vel_y = jump_height
+        # Vi kollar om en knapp tryckts ner
+        if event.type == pygame.KEYDOWN:
+            # Beroende på riktningen sätter en rörelse till sant
+            if event.key == pygame.K_LEFT:
+                moving_left = True
+            if event.key == pygame.K_RIGHT:
+                moving_right = True
+            if event.key == pygame.K_UP and is_grounded:
+                vel_y = jump_height
 
+        # Vi kollar om någon knapp som var nedtryckt nu har släppts
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT: moving_left = False
-            if event.key == pygame.K_RIGHT: moving_right = False
+            # Och stänger då av rörelsen i dess riktning
+            if event.key == pygame.K_LEFT:
+                moving_left = False
+            if event.key == pygame.K_RIGHT:
+                moving_right = False
 
-    # --- 1. RÖRELSE OCH KOLLISION I X-LED ---
+    # --- RÖRELSE OCH KOLLISION I X-LED ---
     if moving_left:
         player_rect.x -= player_speed
     if moving_right:
@@ -64,7 +74,7 @@ while running:
     if player_rect.right > WIDTH:
         player_rect.right = WIDTH
 
-    # Kolla plattformskollision (X)
+    # Kolla plattformskollision i sidled (X) (Om spelaren kolliderar med någon av rektanglarna i listan)
     for platform in platforms:
         if player_rect.colliderect(platform):
             if moving_right:
@@ -72,12 +82,12 @@ while running:
             if moving_left:
                 player_rect.left = platform.right
 
-    # --- 2. RÖRELSE OCH KOLLISION I Y-LED ---
+    # --- RÖRELSE OCH KOLLISION I Y-LED ---s
     vel_y += gravity
     player_rect.y += vel_y
     is_grounded = False
 
-    # Kolla plattformskollision (Y)
+    # Kolla plattformskollision i höjdled (Y)
     for platform in platforms:
         if player_rect.colliderect(platform):
             if vel_y > 0:
@@ -88,13 +98,13 @@ while running:
                 player_rect.top = platform.bottom
                 vel_y = 0
 
-    # --- 3. RITA ---
+    # --- RITA ---
     screen.fill(WHITE)
     
     # Rita plattformar med outline
     for platform in platforms:
-        pygame.draw.rect(screen, GREEN, platform)        # Fyllning
-        # pygame.draw.rect(screen, DARK_GREEN, platform, 3) # Outline (3 pixlar tjock)
+        pygame.draw.rect(screen, GREEN, platform)           # Fyllning
+        pygame.draw.rect(screen, DARK_GREEN, platform, 3)   # Kanter (3 pixlar tjock)
     
     # Rita spelaren sprite
     screen.blit(player_image, player_rect)
