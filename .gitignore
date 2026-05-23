@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+pygame_platform/lib64
+pygame_platform/pyvenv.cfg
+pygame_platform/bin/
+pygame_platform/include/
