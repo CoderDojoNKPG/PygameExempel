@@ -28,10 +28,12 @@ gravity = 0.8
 vel_y = 0
 
 # Plattformar (trappa)
+# pygame.Rect(x start, y start, x slut, y slut)
 platforms = [
-    pygame.Rect(0, 550, 800, 50),
+    pygame.Rect(0, 550, 800, 50), # <- Marken som sträcker över hela fönstret.
+    pygame.Rect(300, 250, 200, 50),
     pygame.Rect(300, 450, 200, 50),
-    pygame.Rect(500, 350, 200, 150)
+    pygame.Rect(500, 350, 200, 50)
 ]
 
 moving_left = False
@@ -47,19 +49,19 @@ while running:
         # Vi kollar om en knapp tryckts ner
         if event.type == pygame.KEYDOWN:
             # Beroende på riktningen sätter en rörelse till sant
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 moving_left = True
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 moving_right = True
-            if event.key == pygame.K_UP and is_grounded:
+            if event.key == pygame.K_UP and is_grounded or event.key == pygame.K_w:
                 vel_y = jump_height
 
         # Vi kollar om någon knapp som var nedtryckt nu har släppts
         if event.type == pygame.KEYUP:
             # Och stänger då av rörelsen i dess riktning
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT  or event.key == pygame.K_a:
                 moving_left = False
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT  or event.key == pygame.K_d:
                 moving_right = False
 
     # --- RÖRELSE OCH KOLLISION I X-LED ---
